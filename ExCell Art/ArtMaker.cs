@@ -74,6 +74,7 @@ namespace ExCell_Art
 
             xlWorkbook.SaveAs(OutputPath);
             xlApp.Quit();
+            bw.ReportProgress(100);
 
 
         }
