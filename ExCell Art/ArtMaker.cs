@@ -63,7 +63,7 @@ namespace ExCell_Art
                     
                     xlRange.Cells[j+1, i+1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bm.GetPixel(i,j));
                 }
-                PercComplete = Convert.ToInt32(Math.Floor(((decimal)j / bm.Height-1) * 100));
+                PercComplete = Convert.ToInt32(Math.Floor(((decimal)j / (bm.Height-1)) * 100));
                 
                 Debug.WriteLine("{0} out of {1}",j*bm.Width,bm.Width*bm.Height);
                 
