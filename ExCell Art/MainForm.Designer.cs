@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.InputName = new System.Windows.Forms.Label();
             this.OutputPathLabel = new System.Windows.Forms.Label();
             this.pathButton = new System.Windows.Forms.Button();
@@ -92,6 +93,8 @@
             this.progressBar.Location = new System.Drawing.Point(12, 231);
             this.progressBar.Name = "progressBar";
             this.progressBar.Size = new System.Drawing.Size(402, 23);
+            this.progressBar.Step = 1;
+            this.progressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar.TabIndex = 6;
             // 
             // ImageButton
@@ -120,6 +123,7 @@
             this.Controls.Add(this.pathButton);
             this.Controls.Add(this.OutputPathLabel);
             this.Controls.Add(this.InputName);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "ExCell Art Generator";
             this.ResumeLayout(false);
