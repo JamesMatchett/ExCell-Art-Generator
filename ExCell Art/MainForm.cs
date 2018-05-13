@@ -18,6 +18,8 @@ namespace ExCell_Art
             InitializeComponent();
         }
 
+        public List<ArtMaker> BWList = new List<ArtMaker>();
+
         public string ImagePath;
         public string OutputPath;
 
@@ -66,9 +68,12 @@ namespace ExCell_Art
             if(!(ImagePath == null) && !(OutputPath == null))
             {
                 ArtMaker A = new ArtMaker(ImagePath, OutputPath);
+                Cancel.Enabled = true;
                 A.start();
                 A.bw.ProgressChanged += Bw_ProgressChanged;
-
+                BWList.Add(A);
+                Start.Enabled = false;
+               
             } else
             {
                 if(ImagePath == null)
@@ -85,7 +90,38 @@ namespace ExCell_Art
 
         private void Bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
+            int percentage = Convert.ToInt32(e.ProgressPercentage);
+
+            //101 signifies finished, stop multithread sending multiple "finished" signal
+            if (percentage == 101)
+            {
+                progressBar.Value = 100;
+                MessageBox.Show("Finished!");
+                foreach (ArtMaker A in BWList)
+                {
+                    A.stop();
+                }
+                progressBar.Value = 0;
+                Start.Enabled = true;
+            }
+            else
+            {
+                progressBar.Value = percentage;
+            }
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            Cancel.Enabled = false;
+           foreach(ArtMaker A in BWList)
+            {
+                A.stop();
+            }
+           //empty list of all cancelled bw's
+            BWList = new List<ArtMaker>();
+            MessageBox.Show("Cancelled!");
+            progressBar.Value = 0;
+            Start.Enabled = true;
         }
     }
 }

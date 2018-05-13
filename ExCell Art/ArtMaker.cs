@@ -11,12 +11,14 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ExCell_Art
 {
-    class ArtMaker
+   public class ArtMaker
     {
       public BackgroundWorker bw = new BackgroundWorker();
         string ImagePath;
         string OutputPath;
         int PercComplete;
+
+        bool Quitting = false;
 
         public Excel.Application xlApp = new Excel.Application();
 
@@ -37,7 +39,10 @@ namespace ExCell_Art
 
         public void stop()
         {
+            Quitting = true;
             bw.CancelAsync();
+            bw.Dispose();
+            
         }
 
         public void bw_makeArt(object sender, EventArgs e)
@@ -55,27 +60,60 @@ namespace ExCell_Art
             
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
+            //assign it here rather than in the for loop to avoid multithreading calamities
+            var Width = bm.Width;
+            var Height = bm.Height;
+
+            decimal totalPixels = (bm.Width - 1) * (bm.Height - 1);
+            decimal pixelCounter = 0;
             //i = across, j = up, image coordinates start from bottom left corner whereas excel starts from top left
-            for(int j = 0; j < bm.Height - 1; j++) 
+            Parallel.For(0, Height - 1, (j,loopState) =>
             {
-                for(int i = 0; i < bm.Width - 1; i++)
+                var bmClone_ = bm.Clone();
+                Bitmap bmClone = ((Bitmap)(bmClone_));
+                for (int i = 0; i < Width - 1; i++)
                 {
-                    
-                    xlRange.Cells[j+1, i+1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bm.GetPixel(i,j));
+                    //make sure a cancel hasn't been requested
+                    if (!Quitting)
+                    {
+                        try
+                        {
+                            xlRange.Cells[j + 1, i + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bmClone.GetPixel(i, j));
+                            pixelCounter++;
+                        } catch
+                        {
+                            
+                        }
+                    }
+                    else
+                    {
+                        //stops all threads from executing for clean exit when cancel is called
+                        loopState.Stop();
+                        break;
+                    }
                 }
-                PercComplete = Convert.ToInt32(Math.Floor(((decimal)j / (bm.Height-1)) * 100));
-                
-                Debug.WriteLine("{0} out of {1}",j*bm.Width,bm.Width*bm.Height);
-                
-                Debug.WriteLine("amount is {0}", PercComplete);
-                bw.ReportProgress(PercComplete);
+
+                if (Quitting)
+                {
+                    loopState.Stop();
+                }
+
+                decimal progress = ((pixelCounter / totalPixels)*100);
+                int progressInt = Convert.ToInt32(progress);
+                bw.ReportProgress(progressInt);
+            });
+
+           
+            if (!Quitting)
+            {
+                xlWorkbook.SaveAs(OutputPath);
+                bw.ReportProgress(101);
             }
             
-
-            xlWorkbook.SaveAs(OutputPath);
+            xlWorkbook.Close(0);
             xlApp.Quit();
-            bw.ReportProgress(100);
-
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
 
         }
 

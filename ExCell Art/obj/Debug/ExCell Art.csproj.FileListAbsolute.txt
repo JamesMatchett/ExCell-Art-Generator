@@ -7,3 +7,13 @@ E:\Programming\C#\Okay Google\ExCell Art\ExCell Art\obj\Debug\ExCell Art.csproj.
 E:\Programming\C#\Okay Google\ExCell Art\ExCell Art\obj\Debug\ExCell Art.exe
 E:\Programming\C#\Okay Google\ExCell Art\ExCell Art\obj\Debug\ExCell Art.pdb
 E:\Programming\C#\Okay Google\ExCell Art\ExCell Art\obj\Debug\ExCell_Art.MainForm.resources
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\bin\Debug\ExCell Art.exe.config
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\bin\Debug\ExCell Art.exe
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\bin\Debug\ExCell Art.pdb
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csprojResolveAssemblyReference.cache
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell_Art.MainForm.resources
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell_Art.Properties.Resources.resources
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csproj.GenerateResource.Cache
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csproj.CoreCompileInputs.cache
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.exe
+D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.pdb
