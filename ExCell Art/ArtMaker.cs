@@ -11,12 +11,14 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ExCell_Art
 {
-    class ArtMaker
+   public class ArtMaker
     {
       public BackgroundWorker bw = new BackgroundWorker();
         string ImagePath;
         string OutputPath;
         int PercComplete;
+
+        bool Quitting = false;
 
         public Excel.Application xlApp = new Excel.Application();
 
@@ -37,7 +39,10 @@ namespace ExCell_Art
 
         public void stop()
         {
+            Quitting = true;
             bw.CancelAsync();
+            bw.Dispose();
+            
         }
 
         public void bw_makeArt(object sender, EventArgs e)
@@ -59,31 +64,56 @@ namespace ExCell_Art
             var Width = bm.Width;
             var Height = bm.Height;
 
-            var totalPixels = (bm.Width - 1) * (bm.Height - 1);
-            var pixelCounter = 0;
+            decimal totalPixels = (bm.Width - 1) * (bm.Height - 1);
+            decimal pixelCounter = 0;
             //i = across, j = up, image coordinates start from bottom left corner whereas excel starts from top left
-            Parallel.For(0, Height - 1, j =>
+            Parallel.For(0, Height - 1, (j,loopState) =>
             {
-               
                 var bmClone_ = bm.Clone();
                 Bitmap bmClone = ((Bitmap)(bmClone_));
-
                 for (int i = 0; i < Width - 1; i++)
                 {
-                    xlRange.Cells[j + 1, i + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bmClone.GetPixel(i, j));
-                    
-                    pixelCounter++;
-                    
+                    //make sure a cancel hasn't been requested
+                    if (!Quitting)
+                    {
+                        try
+                        {
+                            xlRange.Cells[j + 1, i + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bmClone.GetPixel(i, j));
+                            pixelCounter++;
+                        } catch
+                        {
+                            
+                        }
+                    }
+                    else
+                    {
+                        //stops all threads from executing for clean exit when cancel is called
+                        loopState.Stop();
+                        break;
+                    }
                 }
-                
+
+                if (Quitting)
+                {
+                    loopState.Stop();
+                }
+
+                decimal progress = ((pixelCounter / totalPixels)*100);
+                int progressInt = Convert.ToInt32(progress);
+                bw.ReportProgress(progressInt);
             });
 
+           
+            if (!Quitting)
+            {
+                xlWorkbook.SaveAs(OutputPath);
+                bw.ReportProgress(101);
+            }
             
-
-            xlWorkbook.SaveAs(OutputPath);
+            xlWorkbook.Close(0);
             xlApp.Quit();
-            bw.ReportProgress(100);
-
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
 
         }
 
