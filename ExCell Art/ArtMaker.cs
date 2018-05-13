@@ -55,21 +55,29 @@ namespace ExCell_Art
             
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
+            //assign it here rather than in the for loop to avoid multithreading calamities
+            var Width = bm.Width;
+            var Height = bm.Height;
+
+            var totalPixels = (bm.Width - 1) * (bm.Height - 1);
+            var pixelCounter = 0;
             //i = across, j = up, image coordinates start from bottom left corner whereas excel starts from top left
-            for(int j = 0; j < bm.Height - 1; j++) 
+            Parallel.For(0, Height - 1, j =>
             {
-                for(int i = 0; i < bm.Width - 1; i++)
+                lock (bm) ;
+                var bmClone_ = bm.Clone();
+                Bitmap bmClone = ((Bitmap)(bmClone_));
+
+                for (int i = 0; i < Width - 1; i++)
                 {
+                    xlRange.Cells[j + 1, i + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bmClone.GetPixel(i, j));
                     
-                    xlRange.Cells[j+1, i+1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bm.GetPixel(i,j));
+                    pixelCounter++;
+                    
                 }
-                PercComplete = Convert.ToInt32(Math.Floor(((decimal)j / (bm.Height-1)) * 100));
                 
-                Debug.WriteLine("{0} out of {1}",j*bm.Width,bm.Width*bm.Height);
-                
-                Debug.WriteLine("amount is {0}", PercComplete);
-                bw.ReportProgress(PercComplete);
-            }
+            });
+
             
 
             xlWorkbook.SaveAs(OutputPath);

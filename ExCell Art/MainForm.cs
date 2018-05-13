@@ -68,7 +68,7 @@ namespace ExCell_Art
                 ArtMaker A = new ArtMaker(ImagePath, OutputPath);
                 A.start();
                 A.bw.ProgressChanged += Bw_ProgressChanged;
-
+               
             } else
             {
                 if(ImagePath == null)
@@ -85,7 +85,8 @@ namespace ExCell_Art
 
         private void Bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            progressBar.Value = e.ProgressPercentage;
+            int percentage = Convert.ToInt32(e.ProgressPercentage);
+            progressBar.Value = percentage;
         }
     }
 }
