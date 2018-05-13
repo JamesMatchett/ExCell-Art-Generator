@@ -64,7 +64,7 @@ namespace ExCell_Art
             //i = across, j = up, image coordinates start from bottom left corner whereas excel starts from top left
             Parallel.For(0, Height - 1, j =>
             {
-                lock (bm) ;
+               
                 var bmClone_ = bm.Clone();
                 Bitmap bmClone = ((Bitmap)(bmClone_));
 
