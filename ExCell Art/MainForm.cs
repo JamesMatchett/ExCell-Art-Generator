@@ -88,13 +88,53 @@ namespace ExCell_Art
 
         }
 
+        //for estimated time to completion counter
+        DateTime LastPercentageTime = DateTime.Now;
+        decimal LastPercentageValue = 0;
+        List<decimal> AverageTimeFor1Percent = new List<decimal>();
+
         private void Bw_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
+            //if not initiliased, or percentage has not increased since last execution
+            if(LastPercentageValue == 0 || e.ProgressPercentage == 0 || LastPercentageValue == e.ProgressPercentage)
+            {
+                LastPercentageTime = DateTime.Now;
+                LastPercentageValue = e.ProgressPercentage;
+            }
+            else
+            {
+                decimal PercentageDifference = e.ProgressPercentage - LastPercentageValue;
+                TimeSpan TimeDifference = DateTime.Now - LastPercentageTime;
+
+                //time for 1% = (1/percentageDifference * Time Difference)
+                decimal TimeFor1Percent = (1 / PercentageDifference) * Convert.ToDecimal(TimeDifference.TotalSeconds);
+                AverageTimeFor1Percent.Add(TimeFor1Percent);
+                
+                if(AverageTimeFor1Percent.Count > 5)
+                {
+                    AverageTimeFor1Percent.Remove(AverageTimeFor1Percent.First());
+                }
+
+                //now multiply time for 1% by the percentage remianing e.g. 45% done would be 55% percent to go
+                decimal SecondsRemaining = (AverageTimeFor1Percent.Average() * (100 - e.ProgressPercentage));
+                SecondsRemaining = Math.Floor(SecondsRemaining);
+
+                if (SecondsRemaining > 0)
+                {
+                    //update labels and refresh values
+                    TimeRemainingLabel.Text = ("Time Remaining: " + SecondsRemaining + " seconds");
+                    LastPercentageTime = DateTime.Now;
+                    LastPercentageValue = e.ProgressPercentage;
+                }
+            }
+
+
             int percentage = Convert.ToInt32(e.ProgressPercentage);
 
             //101 signifies finished, stop multithread sending multiple "finished" signal
             if (percentage == 101)
             {
+                TimeRemainingLabel.Text = ("Time Remaining: " + 0 + " seconds");
                 progressBar.Value = 100;
                 MessageBox.Show("Finished!");
                 foreach (ArtMaker A in BWList)
@@ -122,6 +162,11 @@ namespace ExCell_Art
             MessageBox.Show("Cancelled!");
             progressBar.Value = 0;
             Start.Enabled = true;
+        }
+
+        private void TimeRemainingLabel_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

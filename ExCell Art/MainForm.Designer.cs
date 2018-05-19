@@ -38,6 +38,7 @@
             this.ImageButton = new System.Windows.Forms.Button();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.TimeRemainingLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // InputName
@@ -113,11 +114,22 @@
             // 
             this.openFileDialog.FileName = "openFileDialog";
             // 
+            // TimeRemainingLabel
+            // 
+            this.TimeRemainingLabel.AutoSize = true;
+            this.TimeRemainingLabel.Location = new System.Drawing.Point(251, 281);
+            this.TimeRemainingLabel.Name = "TimeRemainingLabel";
+            this.TimeRemainingLabel.Size = new System.Drawing.Size(81, 13);
+            this.TimeRemainingLabel.TabIndex = 7;
+            this.TimeRemainingLabel.Text = "Time remaining:";
+            this.TimeRemainingLabel.Click += new System.EventHandler(this.TimeRemainingLabel_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 350);
+            this.Controls.Add(this.TimeRemainingLabel);
             this.Controls.Add(this.ImageButton);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.Cancel);
@@ -143,6 +155,7 @@
         private System.Windows.Forms.Button ImageButton;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.Label TimeRemainingLabel;
     }
 }
 
