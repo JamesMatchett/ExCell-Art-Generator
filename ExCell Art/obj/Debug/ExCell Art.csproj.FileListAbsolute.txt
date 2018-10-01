@@ -17,3 +17,13 @@ D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csproj.Ge
 D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csproj.CoreCompileInputs.cache
 D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.exe
 D:\Git\hecking jm\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.pdb
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\bin\Debug\ExCell Art.exe.config
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\bin\Debug\ExCell Art.exe
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\bin\Debug\ExCell Art.pdb
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csprojResolveAssemblyReference.cache
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell_Art.MainForm.resources
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell_Art.Properties.Resources.resources
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csproj.GenerateResource.Cache
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.csproj.CoreCompileInputs.cache
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.exe
+D:\Git\hecking jm\Excell\ExCell-Art-Generator\ExCell Art\obj\Debug\ExCell Art.pdb
