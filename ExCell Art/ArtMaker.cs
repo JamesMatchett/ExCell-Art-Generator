@@ -14,6 +14,7 @@ namespace ExCell_Art
    public class ArtMaker
     {
       public BackgroundWorker bw = new BackgroundWorker();
+      
         string ImagePath;
         string OutputPath;
         int PercComplete;
@@ -60,15 +61,19 @@ namespace ExCell_Art
             
             Excel.Range xlRange = xlWorksheet.UsedRange;
 
+            ColorSetter cs = new ColorSetter(xlRange);
+
             //assign it here rather than in the for loop to avoid multithreading calamities
             var Width = bm.Width;
             var Height = bm.Height;
 
             decimal totalPixels = (bm.Width - 1) * (bm.Height - 1);
             decimal pixelCounter = 0;
+            
             //i = across, j = up, image coordinates start from bottom left corner whereas excel starts from top left
             Parallel.For(0, Height - 1, (j,loopState) =>
             {
+                
                 var bmClone_ = bm.Clone();
                 Bitmap bmClone = ((Bitmap)(bmClone_));
                 for (int i = 0; i < Width - 1; i++)
@@ -78,8 +83,11 @@ namespace ExCell_Art
                     {
                         try
                         {
-                            xlRange.Cells[j + 1, i + 1].Interior.Color = System.Drawing.ColorTranslator.ToOle(bmClone.GetPixel(i, j));
+                            cs.setColor(i, j, ref bmClone);
+                           
                             pixelCounter++;
+                            
+                            
                         } catch
                         {
                             
@@ -98,6 +106,8 @@ namespace ExCell_Art
                     loopState.Stop();
                 }
 
+                string msg = pixelCounter + "/" + totalPixels;
+                Debug.WriteLine(msg);
                 decimal progress = ((pixelCounter / totalPixels)*100);
                 int progressInt = Convert.ToInt32(progress);
                 bw.ReportProgress(progressInt);
@@ -109,7 +119,8 @@ namespace ExCell_Art
                 xlWorkbook.SaveAs(OutputPath);
                 bw.ReportProgress(101);
             }
-            
+
+            xlRange = cs.Finish();
             xlWorkbook.Close(0);
             xlApp.Quit();
             System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkbook);
@@ -117,5 +128,26 @@ namespace ExCell_Art
 
         }
 
+       
+
+        private class ColorSetter
+        {
+            Excel.Range _xlRange;
+            public ColorSetter(Excel.Range xlRange)
+            {
+                _xlRange = xlRange;
+            }
+
+            public void setColor(int i, int j, ref Bitmap bmClone)
+            {
+                var x = _xlRange.Cells[j + 1, i + 1];
+                x.Interior.Color = ColorTranslator.ToOle(bmClone.GetPixel(i, j));
+            }
+
+            public Excel.Range Finish()
+            {
+                return _xlRange;
+            }
+        }
     }
 }
